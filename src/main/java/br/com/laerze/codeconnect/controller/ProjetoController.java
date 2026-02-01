@@ -1,8 +1,9 @@
 package br.com.laerze.codeconnect.controller;
 
-import br.com.laerze.codeconnect.DTO.request.DadosCadastroProjetoDTO;
 import br.com.laerze.codeconnect.DTO.ProjetoDetalhesDTO;
 import br.com.laerze.codeconnect.DTO.ProjetoMinimoDTO;
+import br.com.laerze.codeconnect.DTO.request.DadosCadastroProjetoDTO;
+import br.com.laerze.codeconnect.DTO.request.DadosConsultaProjetoDTO;
 import br.com.laerze.codeconnect.service.ProjetoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,13 @@ public class ProjetoController {
     private ProjetoService projetoService;
 
     @GetMapping
-    public ResponseEntity<Page<ProjetoMinimoDTO>> buscarProjetos(Pageable pagina) {
-        return ResponseEntity.ok(projetoService.buscarProjetos(pagina));
+    public ResponseEntity<Page<ProjetoMinimoDTO>> buscarProjetos(Pageable pagina,
+                                                                 DadosConsultaProjetoDTO dadosConsulta) {
+        return ResponseEntity.ok(projetoService.buscarProjetos(pagina, dadosConsulta));
     }
 
     @PostMapping
-    public ResponseEntity<ProjetoDetalhesDTO> cadastrarProjeto(@RequestBody @Valid DadosCadastroProjetoDTO dados) {
+    public ResponseEntity<ProjetoDetalhesDTO> cadastrarProjeto(@ModelAttribute @Valid DadosCadastroProjetoDTO dados) {
 
         ProjetoDetalhesDTO projetoDetalhesDTO = projetoService.cadastrarProjeto(dados);
 

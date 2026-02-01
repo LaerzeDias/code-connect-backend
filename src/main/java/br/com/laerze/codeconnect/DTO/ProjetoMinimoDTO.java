@@ -1,7 +1,6 @@
 package br.com.laerze.codeconnect.DTO;
 
 import br.com.laerze.codeconnect.model.Projeto;
-import br.com.laerze.codeconnect.model.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +12,9 @@ public record ProjetoMinimoDTO(
     String descricao,
     String nomeUsuario,
     List<String> tags,
-    Integer numCurtidas,
+    String imagemUrl,
+    Integer numContribuicoes,
+    Integer numCompartilhamentos,
     Integer numComentarios,
     LocalDateTime dataCriacao
 ) {
@@ -23,9 +24,11 @@ public record ProjetoMinimoDTO(
                 projeto.getTitulo(),
                 projeto.getDescricao(),
                 projeto.getUsuario().getNome(),
-                projeto.getTags().stream().map(Tag::getNomeAmigavel).toList(),
-                projeto.getCurtidas(),
-                projeto.getComentarios().size(),
+                projeto.getTags().stream().map(tagEntity -> tagEntity.getNome().getNomeAmigavel()).toList(),
+                "/imagens/" + projeto.getImagemNome(),
+                projeto.getNumContribuicoes(),
+                projeto.getNumCompartilhamentos(),
+                projeto.getNumComentarios(),
                 projeto.getDataCriacao()
         );
     }

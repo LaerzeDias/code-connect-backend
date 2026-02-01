@@ -1,9 +1,9 @@
 package br.com.laerze.codeconnect.DTO.request;
 
-import br.com.laerze.codeconnect.model.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,6 +20,9 @@ public record DadosCadastroProjetoDTO(
         @Pattern(regexp = "^.{50,}$", message = "deve conter no mínimo 50 caracteres")
         String descricao,
 
-        List<Tag> tags
+        @NotNull
+        MultipartFile imagem,
+
+        List<String> tags
 ) {
 }

@@ -13,7 +13,9 @@ public record ProjetoDetalhesDTO(
         String descricao,
         String codigo,
         String nomeUsuario,
-        Integer numCurtidas,
+        String imagemUrl,
+        Integer numContribuicoes,
+        Integer numCompartilhamentos,
         Integer numComentarios,
         List<Comentario> comentarios,
         LocalDateTime dataCriacao
@@ -25,7 +27,9 @@ public record ProjetoDetalhesDTO(
                 projeto.getDescricao(),
                 projeto.getCodigo(),
                 projeto.getUsuario().getNome(),
-                projeto.getCurtidas(),
+                "/imagens/" + projeto.getImagemNome(),
+                projeto.getNumContribuicoes(),
+                projeto.getNumCompartilhamentos(),
                 projeto.getComentarios().size(),
                 projeto.getComentarios(),
                 projeto.getDataCriacao()

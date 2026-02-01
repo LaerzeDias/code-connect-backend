@@ -29,16 +29,22 @@ public class Projeto {
     @Column(columnDefinition = "TEXT")
     private String codigo;
 
-    @ElementCollection(targetClass = Tag.class)
-    @CollectionTable(name = "PROJETO_TAGS", joinColumns = @JoinColumn(name = "projeto_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tag_nome")
-    private List<Tag> tags = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "PROJETOS_TAGS",
+            joinColumns = @JoinColumn(name = "projeto_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<TagEntity> tags = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USUARIO_ID")
     private Usuario usuario;
-    private Integer curtidas;
+    private Integer numContribuicoes = 0;
+    private Integer numCompartilhamentos = 0;
+    private Integer numComentarios = 0;
+    private String imagemNome;
+    private String imagemUrl;
 
     @OneToMany(mappedBy = "projeto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comentario> comentarios = new ArrayList<>();
@@ -49,7 +55,6 @@ public class Projeto {
     public Projeto(DadosCadastroProjetoDTO dadosCadastroProjetoDTO) {
         this.titulo = dadosCadastroProjetoDTO.titulo();
         this.descricao = dadosCadastroProjetoDTO.descricao();
-        this.tags = dadosCadastroProjetoDTO.tags();
     }
 
     @PrePersist

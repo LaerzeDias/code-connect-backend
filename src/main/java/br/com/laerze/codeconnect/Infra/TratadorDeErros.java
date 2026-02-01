@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.Instant;
 import java.util.List;
@@ -42,6 +43,26 @@ public class TratadorDeErros {
         List<CampoInvalidoDTO> camposInvalidos = ex.getFieldErrors().stream()
                 .map(CampoInvalidoDTO::new)
                 .toList();
+
+        ErroDTO erro = new ErroDTO(
+                Instant.now().toString(),
+                status.value(),
+                status.getReasonPhrase(),
+                "Não foi possível concluir a operação desejada devido ao(s) motivo(s) abaixo:",
+                camposInvalidos,
+                webRequest.getDescription(false).replace("uri=", "")
+        );
+
+        return ResponseEntity.status(status.value()).body(erro);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErroDTO> tratarErroTamanhoMaximoAtingido(MaxUploadSizeExceededException ex,
+                                                                   WebRequest webRequest) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        List<CampoInvalidoDTO> camposInvalidos = List.of(new CampoInvalidoDTO("imagem", ex.getLocalizedMessage(),
+                String.format("O tamanho do arquivo ultrapassa o limite de %d MBs máximos", ex.getMaxUploadSize())));
 
         ErroDTO erro = new ErroDTO(
                 Instant.now().toString(),

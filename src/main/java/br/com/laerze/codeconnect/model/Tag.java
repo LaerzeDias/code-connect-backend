@@ -63,7 +63,7 @@ public enum Tag {
     private static void lancarErro(String tagString, String motivo) {
 
         String mensagemErro = "Não foi possível concluir a operação desejada devido ao(s) motivo(s) abaixo:";
-        List<CampoInvalidoDTO> camposInvalidos = List.of(new CampoInvalidoDTO("tags", tagString, motivo));
+        List<CampoInvalidoDTO> camposInvalidos = List.of(new CampoInvalidoDTO("listaTags", tagString, motivo));
         throw new CampoInvalidoException(mensagemErro, camposInvalidos);
     }
 }

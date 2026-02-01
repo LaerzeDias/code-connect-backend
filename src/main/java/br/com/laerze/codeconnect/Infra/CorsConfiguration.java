@@ -1,11 +1,16 @@
 package br.com.laerze.codeconnect.Infra;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfiguration implements WebMvcConfigurer {
+
+    @Value("${upload.diretorio-projetos}")
+    private String diretorioUpload;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -14,5 +19,12 @@ public class CorsConfiguration implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD")
                 .allowedHeaders("*")
                 .allowCredentials(true);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // Define que qualquer URL começando com /imagens/** // deve buscar arquivos na pasta de uploads
+        registry.addResourceHandler("/imagens/**")
+                .addResourceLocations("file:" + diretorioUpload + "/");
     }
 }
