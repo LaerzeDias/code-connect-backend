@@ -57,6 +57,11 @@ public class Projeto {
         this.descricao = dadosCadastroProjetoDTO.descricao();
     }
 
+    public void incluirComentario (Comentario comentario) {
+        this.comentarios.add(comentario);
+        this.numComentarios ++;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.dataCriacao = LocalDateTime.now();

@@ -1,6 +1,5 @@
 package br.com.laerze.codeconnect.DTO;
 
-import br.com.laerze.codeconnect.model.Comentario;
 import br.com.laerze.codeconnect.model.Projeto;
 
 import java.time.LocalDateTime;
@@ -13,11 +12,12 @@ public record ProjetoDetalhesDTO(
         String descricao,
         String codigo,
         String nomeUsuario,
+        List<String> tags,
         String imagemUrl,
         Integer numContribuicoes,
         Integer numCompartilhamentos,
         Integer numComentarios,
-        List<Comentario> comentarios,
+        List<ComentarioDetalhesDTO> comentarios,
         LocalDateTime dataCriacao
 ) {
     public ProjetoDetalhesDTO(Projeto projeto) {
@@ -27,11 +27,14 @@ public record ProjetoDetalhesDTO(
                 projeto.getDescricao(),
                 projeto.getCodigo(),
                 projeto.getUsuario().getNome(),
+                projeto.getTags().stream().map(tagEntity -> tagEntity.getNome().getNomeAmigavel()).toList(),
                 "/imagens/" + projeto.getImagemNome(),
                 projeto.getNumContribuicoes(),
                 projeto.getNumCompartilhamentos(),
-                projeto.getComentarios().size(),
-                projeto.getComentarios(),
+                projeto.getNumComentarios(),
+                projeto.getComentarios().stream()
+                        .filter(c -> c.getComentarioPai() == null)
+                        .map(ComentarioDetalhesDTO::new).toList(),
                 projeto.getDataCriacao()
         );
     }

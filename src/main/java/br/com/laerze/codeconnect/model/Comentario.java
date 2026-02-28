@@ -1,5 +1,6 @@
 package br.com.laerze.codeconnect.model;
 
+import br.com.laerze.codeconnect.DTO.request.DadosCadastroComentario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -36,6 +37,13 @@ public class Comentario {
     private LocalDateTime dataCriacao;
 
     public Comentario() {}
+
+    public Comentario(Projeto projeto, Comentario comentarioPai, Usuario usuario, String conteudo) {
+        this.projeto = projeto;
+        this.comentarioPai = comentarioPai;
+        this.usuario = usuario;
+        this.conteudo = conteudo;
+    }
 
     @PrePersist
     protected void onCreate() {

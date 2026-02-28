@@ -28,6 +28,13 @@ public class ProjetoController {
         return ResponseEntity.ok(projetoService.buscarProjetos(pagina, dadosConsulta));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjetoDetalhesDTO> buscarProjeto(@PathVariable Long id) {
+        ProjetoDetalhesDTO projetoDetalhesDTO = projetoService.buscarProjeto(id);
+
+        return ResponseEntity.ok(projetoDetalhesDTO);
+    }
+
     @PostMapping
     public ResponseEntity<ProjetoDetalhesDTO> cadastrarProjeto(@ModelAttribute @Valid DadosCadastroProjetoDTO dados) {
 

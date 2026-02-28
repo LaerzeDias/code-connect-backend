@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,13 +49,27 @@ public class ProjetoService {
     public Page<ProjetoMinimoDTO> buscarProjetos(Pageable pagina, DadosConsultaProjetoDTO dadosConsulta) {
 
         List<Tag> tags = null;
-        if (dadosConsulta.listaTags() != null && !dadosConsulta.listaTags().isEmpty()) {
-            tags = dadosConsulta.listaTags().stream().map(Tag::fromString).toList();
+        if (dadosConsulta.inputTags() != null && !dadosConsulta.inputTags().isEmpty()) {
+            tags = dadosConsulta.inputTags().stream().map(Tag::fromString).toList();
         }
+
+        System.out.println(tags);
+        System.out.println(dadosConsulta.inputTags());
 
         String inputText = dadosConsulta.inputText() != null ? dadosConsulta.inputText() : null;
 
         return projetoRepository.buscarProjetosPaginados(pagina, inputText, tags).map(ProjetoMinimoDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public ProjetoDetalhesDTO buscarProjeto(Long projetoId) {
+        Projeto projeto = projetoRepository.findById(projetoId).orElseThrow(
+                () -> new CampoInvalidoException(
+                        "Não foi possível carregar as informações do projeto, devido ao(s) motivo(s) abaixo:",
+                        List.of(new CampoInvalidoDTO("projetoId", projetoId,
+                                "Não existe um projeto para o id informado"))));
+
+        return new ProjetoDetalhesDTO(projeto);
     }
 
     @Transactional
@@ -69,7 +84,7 @@ public class ProjetoService {
                     "devido ao(s) motivo(s) abaixo:", camposInvalidos);
         });
 
-        List<TagEntity> tags = mapearEntidadeTags(dados.tags());
+        List<TagEntity> tags = dados.tags() != null ? mapearEntidadeTags(dados.tags()) : new ArrayList<>();
         String nomeImagem = salvarImagem(dados.imagem());
         Projeto novoProjeto = criarProjeto(dados, tags, usuario, nomeImagem);
         projetoRepository.save(novoProjeto); // Persiste o projeto no banco
